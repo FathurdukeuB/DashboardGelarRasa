@@ -3,157 +3,173 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dashboard</title>
+<title>Dashboard Kualitas Udara</title>
 <style>
   :root {
-    --bg: #f3f4f6;
-    --side: #1f2937;
-    --side-hover: #374151;
-    --accent: #f59e0b;
-    --text: #e5e7eb;
-    --muted: #9ca3af;
+    --forest-900: #0b2417;
+    --forest-800: #103221;
+    --forest-700: #17432c;
+    --forest-600: #1f5738;
+    --leaf: #a8d672;
+    --leaf-soft: #cfe8a9;
+    --mist: #e6efe0;
+    --text: #e9f3e2;
+    --muted: #9cb8a0;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); }
+  html, body { height: 100%; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: var(--forest-900); }
   .app { display: flex; height: 100vh; }
 
-  /* Sidebar */
+  /* ---------- Sidebar ---------- */
   .sidebar {
-    width: 240px; flex-shrink: 0; background: var(--side); color: var(--text);
-    display: flex; flex-direction: column; overflow-y: auto;
+    width: 250px; flex-shrink: 0; color: var(--text);
+    display: flex; flex-direction: column; position: relative; overflow: hidden;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(168,214,114,.18), transparent 45%),
+      linear-gradient(180deg, var(--forest-700) 0%, var(--forest-800) 55%, var(--forest-900) 100%);
+    border-right: 1px solid rgba(168,214,114,.15);
   }
-  .brand { padding: 20px 18px 14px; font-size: 18px; font-weight: 700; color: #fff; }
-  .group-title {
-    padding: 14px 18px 6px; font-size: 11px; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--muted);
+  /* daun dekoratif */
+  .sidebar::after {
+    content: ""; position: absolute; right: -60px; bottom: 70px; width: 220px; height: 220px; opacity: .09; pointer-events: none;
+    background: no-repeat center / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%23a8d672' d='M85 8C45 8 14 30 14 64c0 8 2 15 6 21 4-14 14-27 30-37-14 14-22 28-25 42 4 2 9 3 14 3 34 0 60-30 60-85z'/></svg>");
   }
-  .nav-item {
-    display: block; width: 100%; text-align: left; background: none; border: none;
-    color: var(--text); font-size: 14px; padding: 10px 18px; cursor: pointer;
-    border-left: 3px solid transparent;
-  }
-  .nav-item:hover { background: var(--side-hover); }
-  .nav-item.active { background: var(--side-hover); border-left-color: var(--accent); color: #fff; font-weight: 600; }
+  .brand { padding: 26px 22px 18px; position: relative; z-index: 1; }
+  .brand-mark { display: flex; align-items: center; gap: 10px; }
+  .brand-mark svg { width: 30px; height: 30px; flex-shrink: 0; }
+  .brand-title { font-size: 17px; font-weight: 700; color: #fff; line-height: 1.15; }
+  .brand-sub { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--leaf); margin-top: 3px; }
 
-  /* Konten */
-  .content { flex: 1; position: relative; padding: 12px; min-width: 0; }
-  .frame-wrap { position: relative; width: 100%; height: 100%; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  .nav { display: flex; flex-direction: column; gap: 8px; padding: 10px 16px; position: relative; z-index: 1; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(168,214,114,.14);
+    color: var(--text); font-size: 14px; font-family: inherit; padding: 12px 14px; border-radius: 12px; cursor: pointer;
+    transition: background .15s, transform .15s, border-color .15s;
+  }
+  .nav-item:hover { background: rgba(168,214,114,.14); border-color: rgba(168,214,114,.4); transform: translateX(2px); }
+  .nav-item .num {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; background: rgba(168,214,114,.2); color: var(--leaf);
+  }
+  .nav-item.active { background: var(--leaf); color: var(--forest-900); font-weight: 700; border-color: var(--leaf); box-shadow: 0 4px 14px rgba(168,214,114,.25); }
+  .nav-item.active .num { background: var(--forest-800); color: var(--leaf); }
+
+  .watermark {
+    margin-top: auto; padding: 16px 22px 20px; font-size: 11.5px; line-height: 1.5; color: var(--muted);
+    border-top: 1px solid rgba(168,214,114,.14); position: relative; z-index: 1;
+  }
+  .watermark b { color: var(--leaf-soft); font-weight: 600; }
+
+  /* ---------- Konten ---------- */
+  .content { flex: 1; min-width: 0; padding: 14px 14px 10px; display: flex; flex-direction: column; background: var(--mist); }
+  .frame-wrap {
+    position: relative; flex: 1; min-height: 0; background: #fff; border-radius: 14px; overflow: hidden;
+    box-shadow: 0 2px 10px rgba(11,36,23,.18); border: 1px solid rgba(31,87,56,.2);
+  }
   iframe { width: 100%; height: 100%; border: 0; display: block; }
   .loading {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    background: #fff; color: #6b7280; font-size: 14px; transition: opacity .25s;
+    position: absolute; inset: 0; display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center;
+    background: #fff; color: var(--forest-600); font-size: 14px; transition: opacity .3s;
   }
   .loading.hide { opacity: 0; pointer-events: none; }
+  .spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--leaf-soft); border-top-color: var(--forest-600); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Mobile: sidebar jadi bar atas */
-  .menu-btn { display: none; }
+  .footer-strip { text-align: center; font-size: 11.5px; color: var(--forest-600); padding: 8px 0 0; letter-spacing: .02em; }
+  .footer-strip b { color: var(--forest-700); }
+
+  /* ---------- Mobile ---------- */
   @media (max-width: 760px) {
     .app { flex-direction: column; }
-    .sidebar { width: 100%; flex-direction: row; overflow-x: auto; overflow-y: hidden; align-items: center; }
-    .brand, .group-title { display: none; }
-    .nav-item { white-space: nowrap; width: auto; border-left: none; border-bottom: 3px solid transparent; padding: 14px 14px; }
-    .nav-item.active { border-bottom-color: var(--accent); }
-    .content { padding: 6px; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(168,214,114,.15); }
+    .sidebar::after, .watermark { display: none; }
+    .brand { padding: 12px 16px 4px; }
+    .brand-sub { display: none; }
+    .nav { flex-direction: row; overflow-x: auto; padding: 8px 12px 12px; }
+    .nav-item { width: auto; white-space: nowrap; padding: 9px 12px; }
+    .content { padding: 8px 8px 6px; }
   }
+  @media (min-width: 761px) { .footer-strip { display: none; } }
 </style>
 </head>
 <body>
 <div class="app">
-  <nav class="sidebar" id="sidebar"></nav>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#a8d672" d="M85 8C45 8 14 30 14 64c0 8 2 15 6 21 4-14 14-27 30-37-14 14-22 28-25 42 4 2 9 3 14 3 34 0 60-30 60-85z"/></svg>
+        <div>
+          <div class="brand-title">Kualitas Udara</div>
+          <div class="brand-sub">Lingkungan Sehat</div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="watermark">Dibuat oleh<br><b>Tim BEDIL</b><br>Politeknik Statistika STIS</div>
+  </aside>
+
   <main class="content">
     <div class="frame-wrap">
       <iframe id="frame" title="Dashboard" allowfullscreen></iframe>
-      <div class="loading" id="loading">Memuat dashboard…</div>
+      <div class="loading" id="loading"><div class="spinner"></div>Memuat dashboard…</div>
     </div>
+    <div class="footer-strip">Dibuat oleh <b>Tim BEDIL</b> · Politeknik Statistika STIS</div>
   </main>
 </div>
 
 <script>
 /* ============================================================
-   BAGIAN YANG PERLU KAMU EDIT
-   ------------------------------------------------------------
-   1. Ganti "label" dengan nama halaman yang kamu mau tampilkan.
-   2. Isi "page" dengan ID halaman (ReportSectionxxxxxxxx) dari URL
-      Power BI Service. Kalau masih berisi "ISI_ID", halaman itu
-      akan membuka halaman pertama report (default).
+   KONFIGURASI
    ============================================================ */
-
-const SITE_TITLE = "Dashboard";
-
 const REPORTS = {
-  master: "https://app.powerbi.com/view?r=eyJrIjoiOWUxM2E0YjUtNjgwYy00YzFlLTljMjMtMzk5NzhlZDJkNGVlIiwidCI6ImU5N2ZiNWY1LTMzYzctNDg4ZS05MjJhLTMwMzMwNTUzYmM4OCJ9",
-  addon:  "https://app.powerbi.com/view?r=eyJrIjoiNzZkYmRjNGUtY2Y0OC00OWQ0LWFmZTktNTUyMGUyYjU5YmE1IiwidCI6ImU5N2ZiNWY1LTMzYzctNDg4ZS05MjJhLTMwMzMwNTUzYmM4OCJ9"
+  master: "https://app.powerbi.com/view?r=eyJrIjoiMmVkYWFmOGUtNzE3My00YjZhLTk5OWYtM2Y5ZDdlNTBjYzZkIiwidCI6ImU5N2ZiNWY1LTMzYzctNDg4ZS05MjJhLTMwMzMwNTUzYmM4OCJ9",
+  addon:  "https://app.powerbi.com/view?r=eyJrIjoiZjUwNDEzYzgtZjFmYi00MzI4LWEwNTItMWI1ZGZmMjNmYzIxIiwidCI6ImU5N2ZiNWY1LTMzYzctNDg4ZS05MjJhLTMwMzMwNTUzYmM4OCJ9",
+  health: "https://app.powerbi.com/view?r=eyJrIjoiZjc4NDJhMzMtNWJjZS00M2Y4LWI3NDQtNDQ4ZDY4YzJmY2Y0IiwidCI6ImU5N2ZiNWY1LTMzYzctNDg4ZS05MjJhLTMwMzMwNTUzYmM4OCJ9"
 };
 
 const MENU = [
-  { group: "Master", items: [
-    { label: "Halaman 1", report: "master", page: "b563de4c01d735dc9a02" },               // halaman pertama, tidak perlu ID
-    { label: "Halaman 2", report: "master", page: "05529f054e9260460041" }
-  ]},
-  { group: "Add On", items: [
-    { label: "Halaman 3", report: "addon", page: "3b7de6df000ea0e007e0" },                // halaman pertama, tidak perlu ID
-    { label: "Halaman 4", report: "addon", page: "3048ef48809506c86c02" },
-    { label: "Halaman 5", report: "addon", page: "778f757e5ed4d359364d" }
-  ]}
+  { label: "Overview",             report: "master", page: "b563de4c01d735dc9a02" },
+  { label: "Air Quality Analysis", report: "master", page: "05529f054e9260460041" },
+  { label: "Drivers",              report: "addon",  page: "3b7de6df000ea0e007e0" },
+  { label: "Health Impact",        report: "health", page: "3048ef48809506c86c02" },
+  { label: "Monitoring",           report: "health", page: "778f757e5ed4d359364d" }
 ];
 
 /* ============================================================
-   KODE DI BAWAH INI TIDAK PERLU DIUBAH
+   KODE (tidak perlu diubah)
    ============================================================ */
 const frame = document.getElementById("frame");
 const loading = document.getElementById("loading");
-const sidebar = document.getElementById("sidebar");
-let buttons = [];
+const nav = document.getElementById("nav");
+const buttons = [];
 
 function buildUrl(item) {
-  let url = REPORTS[item.report];
-  const params = ["navContentPaneEnabled=false", "filterPaneEnabled=false"];
-  if (item.page && !item.page.startsWith("ISI_ID")) {
-    params.push("pageName=" + encodeURIComponent(item.page));
-  }
-  return url + "&" + params.join("&");
+  const params = ["navContentPaneEnabled=false", "filterPaneEnabled=false", "pageName=" + encodeURIComponent(item.page)];
+  return REPORTS[item.report] + "&" + params.join("&");
 }
 
-function show(item, btn, index) {
+function show(i) {
   buttons.forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
+  buttons[i].classList.add("active");
   loading.classList.remove("hide");
-  frame.src = buildUrl(item);
-  history.replaceState(null, "", "#" + index);
+  frame.src = buildUrl(MENU[i]);
+  history.replaceState(null, "", "#" + i);
 }
 
 frame.addEventListener("load", () => loading.classList.add("hide"));
 
-// Bangun sidebar
-const brand = document.createElement("div");
-brand.className = "brand";
-brand.textContent = SITE_TITLE;
-sidebar.appendChild(brand);
-document.title = SITE_TITLE;
-
-let idx = 0;
-const flat = [];
-MENU.forEach(g => {
-  const t = document.createElement("div");
-  t.className = "group-title";
-  t.textContent = g.group;
-  sidebar.appendChild(t);
-  g.items.forEach(item => {
-    const b = document.createElement("button");
-    b.className = "nav-item";
-    b.textContent = item.label;
-    const i = idx++;
-    b.addEventListener("click", () => show(item, b, i));
-    sidebar.appendChild(b);
-    buttons.push(b);
-    flat.push(item);
-  });
+MENU.forEach((item, i) => {
+  const b = document.createElement("button");
+  b.className = "nav-item";
+  b.innerHTML = '<span class="num">' + (i + 1) + '</span><span>' + item.label + '</span>';
+  b.addEventListener("click", () => show(i));
+  nav.appendChild(b);
+  buttons.push(b);
 });
 
-// Buka halaman sesuai #hash, atau halaman pertama
 const start = parseInt(location.hash.replace("#", ""), 10);
-const first = (!isNaN(start) && flat[start]) ? start : 0;
-show(flat[first], buttons[first], first);
+show(!isNaN(start) && MENU[start] ? start : 0);
 </script>
 </body>
 </html>
